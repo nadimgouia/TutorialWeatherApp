@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                             e.printStackTrace();
                             Toast.makeText(MainActivity.this, "Server error", Toast.LENGTH_SHORT).show();
                         } else {
-                            Log.d("result", result.toString());
+
                         }
                     }
                 });
