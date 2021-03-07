@@ -19,35 +19,34 @@
             android:id="@+id/etCityName"
             android:layout_width="0dp"
             android:layout_height="45dp"
-            android:paddingLeft="10dp"
             android:layout_marginTop="2dp"
+            android:layout_weight="70"
             android:background="@drawable/border_edittext"
             android:hint="City name"
-            android:layout_weight="70" />
+            android:paddingLeft="10dp" />
 
         <Button
             android:id="@+id/btnSearch"
             android:layout_width="0dp"
-            android:text="Search"
             android:layout_height="45dp"
+            android:layout_weight="30"
             android:background="@drawable/background_button"
-            android:layout_weight="30" />
+            android:text="Search" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_marginTop="40dp"
         android:gravity="center"
-        android:layout_marginTop="40dp">
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/iconWeather"
             android:layout_width="150dp"
-            android:src="@drawable/icon02d"
-            android:scaleType="centerCrop"
-            android:layout_height="150dp"/>
+            android:layout_height="150dp"
+            android:scaleType="centerCrop"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -56,25 +55,28 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tvTemp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                tools:text="20 °C"
                 android:textSize="30sp"
-                android:textStyle="bold"
-                android:text="20 °C"/>
+                android:textStyle="bold" />
+
             <TextView
+                android:id="@+id/tvCity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                tools:text="Landon, US"
                 android:textSize="26sp"
-                android:textStyle="bold"
-                android:text="Landon, US"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
     </LinearLayout>
 
     <ListView
         android:id="@+id/lvDailyWeather"
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp" />
 
 </LinearLayout>
