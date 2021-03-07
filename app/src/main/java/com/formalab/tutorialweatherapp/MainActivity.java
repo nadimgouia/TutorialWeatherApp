@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String city = etCityName.getText().toString();
-                if(city.isEmpty())
+                if (city.isEmpty())
                     Toast.makeText(MainActivity.this, "Please enter a city name", Toast.LENGTH_SHORT).show();
                 else {
                     // TODO : load weather by city name !
@@ -55,39 +55,63 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadWeatherByCityName(String city) {
+        String apiUrl = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=metric&appid=" + API_KEY;
         Ion.with(this)
-                .load("http://api.openweathermap.org/data/2.5/weather?q="+city+"&&units=metric&appid="+API_KEY)
+                .load(apiUrl)
                 .asJsonObject()
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override
                     public void onCompleted(Exception e, JsonObject result) {
                         // do stuff with the result or error
-                        if(e != null) {
+                        if (e != null) {
                             e.printStackTrace();
                             Toast.makeText(MainActivity.this, "Server error", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
+                        } else {
                             // convert json response to java
                             JsonObject main = result.get("main").getAsJsonObject();
                             double temp = main.get("temp").getAsDouble();
-                            tvTemp.setText(temp+"°C");
+                            tvTemp.setText(temp + "°C");
 
                             JsonObject sys = result.get("sys").getAsJsonObject();
                             String country = sys.get("country").getAsString();
-                            tvCity.setText(city+", "+country);
+                            tvCity.setText(city + ", " + country);
 
                             JsonArray weather = result.get("weather").getAsJsonArray();
                             String icon = weather.get(0).getAsJsonObject().get("icon").getAsString();
                             loadIcon(icon);
 
+                            JsonObject coord = result.get("coord").getAsJsonObject();
+                            double lon = coord.get("lon").getAsDouble();
+                            double lat = coord.get("lat").getAsDouble();
+                            loadDailyForecast(lon, lat);
                         }
                     }
                 });
     }
 
+    private void loadDailyForecast(double lon, double lat) {
+        String apiUrl = "https://api.openweathermap.org/data/2.5/onecall?lat="+lat+"&lon="+lon+"&exclude=hourly,minutely,current&units=metric&appid=" + API_KEY;
+        Ion.with(this)
+                .load(apiUrl)
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        // do stuff with the result or error
+                        if (e != null) {
+                            e.printStackTrace();
+                            Toast.makeText(MainActivity.this, "Server error", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Log.d("result", result.toString());
+                        }
+                    }
+                });
+    }
+
+
     private void loadIcon(String icon) {
         Ion.with(this)
-                .load("http://openweathermap.org/img/w/"+icon+".png")
+                .load("http://openweathermap.org/img/w/" + icon + ".png")
                 .intoImageView(iconWeather);
     }
 
