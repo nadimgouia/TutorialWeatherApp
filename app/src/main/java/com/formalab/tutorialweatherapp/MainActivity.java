@@ -61,7 +61,21 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onCompleted(Exception e, JsonObject result) {
                         // do stuff with the result or error
-                        Log.d("result", result.toString());
+                        if(e != null) {
+                            e.printStackTrace();
+                            Toast.makeText(MainActivity.this, "Server error", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            // convert json response to java
+                            JsonObject main = result.get("main").getAsJsonObject();
+                            double temp = main.get("temp").getAsDouble();
+                            tvTemp.setText(temp+"°C");
+
+                            JsonObject sys = result.get("sys").getAsJsonObject();
+                            String country = sys.get("country").getAsString();
+                            tvCity.setText(city+", "+country);
+
+                        }
                     }
                 });
     }
