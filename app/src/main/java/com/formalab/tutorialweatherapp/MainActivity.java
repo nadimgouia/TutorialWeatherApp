@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +16,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     EditText etCityName;
     ImageView iconWeather;
     TextView tvTemp, tvCity;
+    ListView lvDailyWeather;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         iconWeather = findViewById(R.id.iconWeather);
         tvTemp = findViewById(R.id.tvTemp);
         tvCity = findViewById(R.id.tvCity);
+        lvDailyWeather = findViewById(R.id.lvDailyWeather);
 
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
@@ -102,7 +108,19 @@ public class MainActivity extends AppCompatActivity {
                             e.printStackTrace();
                             Toast.makeText(MainActivity.this, "Server error", Toast.LENGTH_SHORT).show();
                         } else {
+                            List<Weather> weatherList = new ArrayList<>();
+                            String timeZone = result.get("timezone").getAsString();
+                            JsonArray daily = result.get("daily").getAsJsonArray();
+                            for(int i=1;i<daily.size();i++) {
+                                Long date = daily.get(i).getAsJsonObject().get("dt").getAsLong();
+                                Double temp = daily.get(i).getAsJsonObject().get("temp").getAsJsonObject().get("day").getAsDouble();
+                                String icon = daily.get(i).getAsJsonObject().get("weather").getAsJsonArray().get(0).getAsJsonObject().get("icon").getAsString();
+                                weatherList.add(new Weather(date, timeZone, temp, icon));
+                            }
 
+                            // attach adapter to listview
+                            DailyWeatherAdapter dailyWeatherAdapter = new DailyWeatherAdapter(MainActivity.this, weatherList);
+                            lvDailyWeather.setAdapter(dailyWeatherAdapter);
                         }
                     }
                 });
