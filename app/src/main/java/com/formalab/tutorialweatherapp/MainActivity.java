@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -75,8 +76,19 @@ public class MainActivity extends AppCompatActivity {
                             String country = sys.get("country").getAsString();
                             tvCity.setText(city+", "+country);
 
+                            JsonArray weather = result.get("weather").getAsJsonArray();
+                            String icon = weather.get(0).getAsJsonObject().get("icon").getAsString();
+                            loadIcon(icon);
+
                         }
                     }
                 });
     }
+
+    private void loadIcon(String icon) {
+        Ion.with(this)
+                .load("http://openweathermap.org/img/w/"+icon+".png")
+                .intoImageView(iconWeather);
+    }
+
 }
